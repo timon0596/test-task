@@ -1,7 +1,12 @@
 <template lang="pug">
 .main.colored
+	.note-links__list
+		.note-link(v-for="(note,index) in getNotes"  :key="index")
+			router-link(:to="'/notes/' + index")
+				note(:i="index")
 	.note-list
-		note(v-for="(note,index) in getNotes" :note="note" :index="index" :key="index")
+		
+
 </template>
 <script>
 	import {mapActions,mapGetters,mapMutations} from 'vuex'

@@ -51,5 +51,6 @@
 	min-height: 100px
 	border: 2px solid #77a8a8
 	font-weight: bold
-	
+a
+	text-decoration: none
 </style>

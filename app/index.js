@@ -6,13 +6,15 @@ import './reset.sass'
 import app from './vue/app.vue'
 import main from './vue/main.vue'
 import create from './vue/create.vue'
+import note from './vue/note.vue'
 import {mapActions,mapGetters,mapMutations} from 'vuex'
 Vue.use(Vuex)
 Vue.use(vuerouter)
 const router = new vuerouter({
   routes:[
     {path: '/create', component: create},
-    {path: '/', component: main},
+    {path: '/', component: main, name: 'main'},
+    {path: '/notes/:index', component: note, props: true,name: 'note'},
   ]
 })
 const store = new Vuex.Store({
@@ -22,7 +24,7 @@ const store = new Vuex.Store({
       tasks: []
     },
     notes: [
-      {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test taqqqqqqqqqqqqqqqsk #2'}], beforeModifying: {}, modified: {}},
+      {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test task'},{checked: false,todo: 'test task'},{checked: false,todo: 'test taqqqqqqqqqqqqqqqsk #2'}], beforeModifying: {}, modified: {}},
       null,
       {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test taqqqqqqqqqqqqqqqsk #2'}], beforeModifying: {}, modified: {}}
     ],

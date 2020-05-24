@@ -1,17 +1,22 @@
 <template lang="pug">
-.note.block
+.note.block(:class="{ limitedScale: $route.name=='main'}")
+	.block__mask(v-if="$route.name=='main'")
 	.note__content
 		.note__header {{thisNote.name}}
 			input(v-show="redacting" name="name" v-model:value="thisNote.name")
 			.delete.delete__name.btn(v-show="redacting" @click="thisNote.name=''") очистить
 		.todo__list
-			todo(@deletetask="deleteTask($event)" v-for="(todo,index) in thisNote.toDos" :redacting="redacting" :todo="todo" :index="index" :key="index")
+			todo(@deletetask="deleteTask($event)" v-for="(todo,index) in thisNote.toDos"
+				v-if="($route.name=='main'&&index<2)||$route.name=='note'"
+				:redacting="redacting" 
+				:todo="todo" :index="index" 
+				:key="index")
 			.newTodo(v-show="redacting")
 				.newTodo__text {{newTodo.todo}}
 				input(v-model="newTodo.todo")
 				.btn.newTodo__add(@click="addNewTodo") добавить задачу
 	.note__options
-		.redact.btn(@click="redact") редактировать
+		.redact.btn(@click="redact" v-show="$route.name=='note'") редактировать
 		.show_opt(v-show="redacting")
 			.save.btn(@click="save") сохранить 
 			.reverseChanges
@@ -26,6 +31,7 @@
 		name: 'note',
 		data(){
 			return {
+				index: null,
 				newTodo: {checked: false, todo: ''},
 				redacting: false,
 				thisNote: null
@@ -34,10 +40,10 @@
 		components: {
 			todo
 		},
+		props: ['i'],
 		computed:{
-			...mapGetters(['getNotes','isSaved']),
+			...mapGetters(['getNotes']),
 		},
-		props: ['note','index'],
 		methods: {
 			...mapMutations(['noteChanges','deleteNote']),
 			noteDelete(i){
@@ -56,7 +62,7 @@
 			cancel(){
 				let {name, toDos} = this.thisNote
 				this.thisNote.modified = JSON.parse(JSON.stringify({name , toDos}))
-				this.thisNote = JSON.parse(JSON.stringify({...this.thisNote,...this.thisNote.beforeModifying}))
+				this.thisNote = {...this.thisNote,...this.thisNote.beforeModifying}
 			},
 			save(){
 				let {name, toDos} = this.getNotes[this.index]
@@ -68,19 +74,17 @@
 
 			},
 			returnChanges(){
-					this.thisNote = JSON.parse(JSON.stringify({...this.thisNote, ...this.thisNote.modified}))
+					this.thisNote = {...this.thisNote, ...this.thisNote.modified}
 			},
 			addNewTodo(){
 				if(this.newTodo.todo.trim()){
-					this.thisNote.toDos.push(this.newTodo)
+					this.thisNote.toDos.push(JSON.parse(JSON.stringify(this.newTodo)))
 				}
 			}
 		},
-		mounted(){
-			
-		},
+
 		created(){
-			
+			this.index = this?.i ?? this.$route.params.index
 			this.thisNote = JSON.parse(JSON.stringify(this.getNotes[this.index]))
 			if(!Object.keys(this.thisNote.beforeModifying).length){
 				let {name, toDos} = this.thisNote
@@ -92,6 +96,7 @@
 </script>
 <style lang="sass" scoped>
 .note
+	position: relative
 	display: grid
 	grid-gap: 2rem
 	width: 250px
@@ -122,6 +127,14 @@
 			grid-gap: 1rem
 		.delete
 			margin: 0
-		
-
+.limitedScale
+	height: 200px
+	overflow: hidden
+.block__mask
+	position: absolute
+	left: 0
+	top: 0
+	width: 100%	
+	height: 100%
+	background: linear-gradient(180deg, rgba(255,255,255,0) 60%, rgba(255,255,255,1) 80%)
 </style>

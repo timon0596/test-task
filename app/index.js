@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     notes: [
       {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test task'},{checked: false,todo: 'test task'},{checked: false,todo: 'test taqqqqqqqqqqqqqqqsk #2'}], beforeModifying: {}, modified: {}},
       null,
-      {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test taqqqqqqqqqqqqqqqsk #2'}], beforeModifying: {}, modified: {}}
+      {name: 'test', toDos: [{checked: false,todo: 'test task'},{checked: false,todo: 'test task #2 test task #2'}], beforeModifying: {}, modified: {}}
     ],
     
   },
@@ -62,11 +62,7 @@ const store = new Vuex.Store({
     }
     
   },
-  // actions: {
-  // 	deleteNote({commit},i){
-  //     commit('deleteNote')
-  //   }
-  // },
+  
   getters: {
   	getNewNote(state){
       return state.newNote
@@ -85,9 +81,18 @@ new Vue({
 	methods:{
     ...mapMutations(['notesInitial'])
 	},
-  created(){
+  async created(){
+    if(localStorage.getItem('notes')){
+      this.$store.state.notes = JSON.parse(localStorage.getItem('notes'))
+    }
     this.notesInitial()
     this.$on('deleted',()=>{this.notesInitial()})
+    let thiss = this
+    window.onbeforeunload = function(e)
+    {  
+
+       localStorage.setItem('notes', JSON.stringify(thiss.$store.state.notes))
+    }
   }
 	
 })

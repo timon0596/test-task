@@ -31,6 +31,7 @@
 	align-items: baseline
 	grid-template-columns: auto 1fr
 	justify-content: start
+	
 	.todo
 		justify-self: stretch
 		display: grid

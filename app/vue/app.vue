@@ -23,6 +23,7 @@
 .navbar
 	nav
 		display: flex
+		margin-bottom: 1rem
 .link.block
 	width: 100px
 	height: 100px

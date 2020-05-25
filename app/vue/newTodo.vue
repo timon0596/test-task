@@ -1,6 +1,6 @@
 <template lang="pug">
 .todo 
-	.todo__description(ref="descr") {{task.todo}}
+	.todo__description {{task.todo}}
 	.delete.btn(@click="deletetask") удалить
 
 </template>
@@ -25,5 +25,7 @@
 	}
 </script>
 <style lang="sass" scoped>
-
+.todo
+	display: grid
+	grid-gap: 1rem
 </style>

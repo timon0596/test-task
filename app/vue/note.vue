@@ -22,7 +22,17 @@
 			.reverseChanges
 				.cancel.btn(@click="cancel") отменить
 				.returnChanges.btn(@click="returnChanges") вернуть изменение
-			.delete.delete__note.btn(@click="noteDelete(index)") удалить заметку
+			.delete.delete__note.btn(@click="toBeDeleted=index;showPopup=true") удалить заметку
+	.pop-up(v-if="$route.name=='note'" v-show="showPopup")
+		.pop-up__container удалить?
+			.pop-up__body
+				.btn.delete(@click="noteDelete(toBeDeleted);showPopup=false") да
+				.btn(@click="showPopup=false") отмена
+	.pop-up(v-if="$route.name=='note'" v-show="showPopupR")
+		.pop-up__container отменить редактирование?
+			.pop-up__body
+				.btn.delete(@click=";showPopupR=false;redacting=!redacting") да
+				.btn(@click="showPopupR=false") отмена
 </template>
 <script>
 	import {mapActions,mapGetters,mapMutations} from 'vuex'
@@ -31,6 +41,9 @@
 		name: 'note',
 		data(){
 			return {
+				toBeDeleted: null,
+				showPopup: false,
+				showPopupR: false,
 				index: null,
 				newTodo: {checked: false, todo: ''},
 				redacting: false,
@@ -50,11 +63,15 @@
 				this.deleteNote(i)
 				this.$el.style.display = "none"
 				this.$root.$emit('deleted')
-				console.log(JSON.stringify(this.getNotes,null,2))
 
 			},
 			redact(){
-				this.redacting=!this.redacting
+				if(this.redacting){
+					this.showPopupR=true
+				}
+				else{
+					this.redacting=!this.redacting
+				}
 			},
 			deleteTask(e){
 				this.thisNote.toDos.splice(e,1)
@@ -101,8 +118,6 @@
 	grid-gap: 2rem
 	width: 250px
 	word-break: break-word
-	margin-left: 1rem
-	margin-top: 1rem
 	.note__content
 		display: grid
 		grid-gap: 1rem

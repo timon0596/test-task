@@ -6,7 +6,7 @@
 		.btn(@click="addTask") добавить задачу
 		.note__wrapper
 			.note__name {{getNewNote.name}}
-				.delete(v-show="getNewNote.name" @click="newNote_deleteName") удалить
+				.btn.delete(v-show="getNewNote.name" @click="newNote_deleteName") удалить
 			.todo__list
 				todo(v-for="(task,index) in getNewNote.tasks" :task="task" :key="index")
 			.note__add.btn(@click="addThisNote") добавить заметку
@@ -62,10 +62,17 @@
 	justify-items: start
 
 .todo__list
+	display: grid
+	grid-gap: 1rem
 	.todo
 		font-size: 1.5rem
 .note__wrapper
 	display: grid
 .note__add.btn
 	justify-self: end
+.btn
+	margin-top: 1rem
+.note__name
+	font-size: 2rem
+	color: #b9b0b0
 </style>
